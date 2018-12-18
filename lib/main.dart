@@ -50,31 +50,55 @@ class Pair {
 
 class _HomeContentState extends State<HomeContent>
     with TickerProviderStateMixin {
+  Animation<double> animation;
   List<Pair> points = [Pair(200, 200), new Pair(4, 7)];
   double percentage = 0.0;
   double newPercentage = 0.0;
-  AnimationController percentageAnimationController;
+  AnimationController controller;
 
   @override
   void initState() {
     super.initState();
+
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 1000), vsync: this);
+    animation = Tween(begin: 0.0, end: 300.0).animate(controller);
+
+    animation.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controller.forward();
+      }
+    });
+
+    controller.addListener(() {
+      setState(() {
+        for (int i = 0; i < points.length; ++i) {
+          points[i].x++;
+          points[i].y++;
+        }
+        //percentage = lerpDouble(percentage, newPercentage, controller.value);
+      });
+    });
+
+    controller.forward();
+
     setState(() {
       points.add(Pair(20, 30));
       percentage = 0.0;
+
+      /* controller = AnimationController(
+          vsync: this, duration: new Duration(milliseconds: 3000));
+
+     
+
+      controller.forward(from: 0.0);*/
     });
-    percentageAnimationController = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 100))
-      ..addListener(() {
-        setState(() {
-          percentage = lerpDouble(
-              percentage, newPercentage, percentageAnimationController.value);
-        });
-      });
-    percentageAnimationController.forward();
+
+    //
   }
 
   dispose() {
-    percentageAnimationController.dispose();
+    controller.dispose();
     super.dispose();
   }
 
@@ -107,7 +131,7 @@ class _HomeContentState extends State<HomeContent>
                       percentage = 0.0;
                       newPercentage = 0.0;
                     }
-                    percentageAnimationController.forward(from: 0.0);
+                    controller.forward(from: 0.0);
                   });
                 }),
           ),
@@ -122,10 +146,6 @@ class _HomeContentState extends State<HomeContent>
   }
 
   void generateNewCircle() {
-    for (int i = 0; i < points.length; ++i) {
-      points[i].x++;
-      points[i].y++;
-    }
     points.add(Pair(generateRandomNumber(), generateRandomNumber()));
   }
 }
