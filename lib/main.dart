@@ -61,7 +61,7 @@ class _HomeContentState extends State<HomeContent>
     with TickerProviderStateMixin
 {
     Animation<double> animation;
-    List<Body> bodys = [Body(200.0, 200.0, 0.0, 0.0, 0.05)];
+    List<Body> bodys = [Body(200.0, 200.0, 0.0, 0.0, 3.0)];
     double percentage = 0.0;
     double newPercentage = 0.0;
     AnimationController controller;
@@ -122,7 +122,7 @@ class _HomeContentState extends State<HomeContent>
             }
         }
         //Then, loop again and update the bodies using timestep dt
-        for (int i = 0; i < bodysLength; i++)
+        for (int i = 1; i < bodysLength; i++)
         {
             bodys[i].update(1e11);
         }
@@ -178,13 +178,13 @@ class _HomeContentState extends State<HomeContent>
 
     double generateRandomNumber()
     {
-        return new Random().nextInt(500).toDouble();
+        return new Random().nextInt(250).toDouble();
     }
 
     void generateNewCircle()
     {
         bodys.add(Body(
-            generateRandomNumber(), generateRandomNumber(), 0.0, 0.0, Random().nextDouble()));
+            generateRandomNumber(), generateRandomNumber(), 0.000000005, -0.0000000005, Random().nextDouble() / 2));
     }
 }
 
@@ -266,16 +266,23 @@ class Body
         this.velocityX = velocityX;
         this.velocityY = velocityY;
         this.mass = mass;
-        this.radius = (
-            (3 * (
-                this.mass / (pi * 4)
-            )) / 3) * 500;
+        if (this.mass != 3.0)
+        {
+            this.radius = (
+                (3 * (
+                    this.mass / (pi * 4)
+                )) / 3) * 500;
+        }
+        else
+        {
+            this.radius = 10.0;
+        }
     }
 
     // update the velocity and position using a timestep dt
     void update(double dt)
     {
-        dt = 1000000000.0;
+        dt = 500000000.0;
         velocityX += dt * forceX / mass;
         velocityY += dt * forceY / mass;
         positionX += dt * velocityX;
