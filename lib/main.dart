@@ -3,6 +3,8 @@ import 'dart:core';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
+import './Models/Position.class.dart';
+import 'package:nbody/Models/Velocity.class.dart';
 
 void main()
 => runApp(new MyApp());
@@ -47,14 +49,6 @@ class HomeContent extends StatefulWidget
     @override
     _HomeContentState createState()
     => _HomeContentState();
-}
-
-class Pair
-{
-    Pair(this.x, this.y);
-
-    int x;
-    int y;
 }
 
 class _HomeContentState extends State<HomeContent>
@@ -249,17 +243,17 @@ class Body
 {
     double G = 6.673e-11; // gravitational constant
 
-    double positionX;
-    double positionY; // holds the cartesian positions
-    double velocityX;
-    double velocityY; // velocity components
+    Position _position;
+    Velocity _velocity;
+    Acceleration _acceleration;
+
     double forceX;
     double forceY;
     double radius; // force components
     double mass; // mass
 
     // create and initialize a new Body
-    Body(double positionX, double positionY, double velocityX, double velocityY, double mass)
+    Body(Position position, Velocity velocity, double mass)
     {
         this.positionX = positionX;
         this.positionY = positionY;
@@ -277,6 +271,17 @@ class Body
         {
             this.radius = 10.0;
         }
+    }
+
+    void setPosition(positionX, positionY)
+    {
+        this.positionX = positionX;
+        this.positionY = positionY;
+    }
+
+    void getPosition(positionX, positionY)
+    {
+        return {x: this.positionX, y: this.positionY};
     }
 
     // update the velocity and position using a timestep dt
