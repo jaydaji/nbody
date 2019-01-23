@@ -9,18 +9,16 @@ import 'package:nbody/Models/Velocity.class.dart';
 void main()
 => runApp(new MyApp());
 
-class MyApp extends StatelessWidget
-{
-    @override
-    Widget build(BuildContext context)
-    {
-        return new MaterialApp(
-            title: 'Flutter Experiments',
-            theme: new ThemeData(),
-            home: new Home(),
-            debugShowCheckedModeBanner: false,
-        );
-    }
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new MaterialApp(
+      title: 'Gravity Simulation',
+      theme: new ThemeData(),
+      home: new Home(),
+      debugShowCheckedModeBanner: false,
+    );
+  }
 }
 
 class Home extends StatelessWidget
