@@ -5,20 +5,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import './Models/Position.class.dart';
 import 'package:nbody/Models/Velocity.class.dart';
+import 'package:nbody/Models/Acceleration.class.dart';
 
 void main()
 => runApp(new MyApp());
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Gravity Simulation',
-      theme: new ThemeData(),
-      home: new Home(),
-      debugShowCheckedModeBanner: false,
-    );
-  }
+class MyApp extends StatelessWidget
+{
+    @override
+    Widget build(BuildContext context)
+    {
+        return new MaterialApp(
+            title: 'Gravity Simulation',
+            theme: new ThemeData(),
+            home: new Home(),
+            debugShowCheckedModeBanner: false,
+        );
+    }
 }
 
 class Home extends StatelessWidget
@@ -53,7 +56,9 @@ class _HomeContentState extends State<HomeContent>
     with TickerProviderStateMixin
 {
     Animation<double> animation;
-    List<Body> bodys = [Body(200.0, 200.0, 0.0, 0.0, 3.0)];
+
+    List<Body> bodys = [Body(Position(200.0, 200.0), Velocity(0.0, 0.0), Acceleration(3.0, 0.0))];
+
     double percentage = 0.0;
     double newPercentage = 0.0;
     AnimationController controller;
@@ -176,7 +181,10 @@ class _HomeContentState extends State<HomeContent>
     void generateNewCircle()
     {
         bodys.add(Body(
-            generateRandomNumber(), generateRandomNumber(), 0.000000005, -0.0000000005, Random().nextDouble() / 2));
+            Position(generateRandomNumber(), generateRandomNumber()),
+            Velocity(0.000000005, -0.0000000005),
+            Acceleration(Random().nextDouble() / 2, 0.0))
+        );
     }
 }
 
@@ -251,7 +259,7 @@ class Body
     double mass; // mass
 
     // create and initialize a new Body
-    Body(Position position, Velocity velocity, double mass)
+    Body(Position position, Velocity velocity, Acceleration acceleration)
     {
         this.positionX = positionX;
         this.positionY = positionY;
