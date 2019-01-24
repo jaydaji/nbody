@@ -1,9 +1,9 @@
-class Velocity
+class Momentum
 {
     double _velocityX;
     double _velocityY;
 
-    Velocity(double velocityX, double velocityY)
+    Momentum(double velocityX, double velocityY)
     {
         this._velocityX = velocityX;
         this._velocityY = velocityY;
@@ -24,7 +24,7 @@ class Velocity
         return this._velocityX;
     }
 
-    double geY()
+    double getY()
     {
         return this._velocityY;
     }

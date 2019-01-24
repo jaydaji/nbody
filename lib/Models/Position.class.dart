@@ -24,7 +24,7 @@ class Position
         return this._positionX;
     }
 
-    double geY()
+    double getY()
     {
         return this._positionY;
     }

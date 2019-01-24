@@ -24,7 +24,7 @@ class Acceleration
         return this._accelerationX;
     }
 
-    double geY()
+    double getY()
     {
         return this._accelerationY;
     }

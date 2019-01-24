@@ -4,8 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 import './Models/Position.class.dart';
-import 'package:nbody/Models/Velocity.class.dart';
-import 'package:nbody/Models/Acceleration.class.dart';
+import './Models/Velocity.class.dart';
+import './Models/Acceleration.class.dart';
 
 void main()
 => runApp(new MyApp());
@@ -57,7 +57,7 @@ class _HomeContentState extends State<HomeContent>
 {
     Animation<double> animation;
 
-    List<Body> bodys = [Body(Position(200.0, 200.0), Velocity(0.0, 0.0), Acceleration(3.0, 0.0))];
+    List<Body> bodys = [Body(Position(200.0, 200.0), Momentum(0.0, 0.0), 3.0)];
 
     double percentage = 0.0;
     double newPercentage = 0.0;
@@ -182,8 +182,8 @@ class _HomeContentState extends State<HomeContent>
     {
         bodys.add(Body(
             Position(generateRandomNumber(), generateRandomNumber()),
-            Velocity(0.000000005, -0.0000000005),
-            Acceleration(Random().nextDouble() / 2, 0.0))
+            Momentum(0.000000005, -0.0000000005),
+            Random().nextDouble() / 2)
         );
     }
 }
@@ -229,7 +229,7 @@ class MyPainter extends CustomPainter
         canvas.drawCircle(center, radius, line);
         for (int i = 0; i < bodys.length; ++i)
         {
-            Offset position = new Offset(bodys[i].positionX, bodys[i].positionY);
+            Offset position = new Offset(bodys[i]._position.getX(), bodys[i]._position.getY());
             canvas.drawCircle(position, bodys[i].radius, nbody);
         }
         double arcAngle = 2 * pi * (completePercent / 100);
@@ -250,21 +250,18 @@ class Body
     double G = 6.673e-11; // gravitational constant
 
     Position _position;
-    Velocity _velocity;
+    Momentum _velocity;
     Acceleration _acceleration;
 
-    double forceX;
-    double forceY;
     double radius; // force components
     double mass; // mass
 
     // create and initialize a new Body
-    Body(Position position, Velocity velocity, Acceleration acceleration)
+    Body(Position position, Momentum velocity, double mass)
     {
-        this.positionX = positionX;
-        this.positionY = positionY;
-        this.velocityX = velocityX;
-        this.velocityY = velocityY;
+        this._position = new Position(position.getX(), position.getY());
+        this._velocity = new Momentum(velocity.getX(), velocity.getY());
+
         this.mass = mass;
         if (this.mass != 3.0)
         {
@@ -279,32 +276,32 @@ class Body
         }
     }
 
-    void setPosition(positionX, positionY)
+    void setPosition(Position position)
     {
-        this.positionX = positionX;
-        this.positionY = positionY;
+        this._position.setX(position.getX());
+        this._position.setY(position.getY());
     }
 
-    void getPosition(positionX, positionY)
+    Position getPosition()
     {
-        return {x: this.positionX, y: this.positionY};
+        return this._position;
     }
 
     // update the velocity and position using a timestep dt
     void update(double dt)
     {
         dt = 500000000.0;
-        velocityX += dt * forceX / mass;
-        velocityY += dt * forceY / mass;
-        positionX += dt * velocityX;
-        positionY += dt * velocityY;
+        this._velocity.setX(this._velocity.getX() + dt * this._acceleration.getX() / mass);
+        this._velocity.setY(this._velocity.getY() + dt * this._acceleration.getY() / mass);
+        this._position.setX(this._position.getX() + dt * this._velocity.getX());
+        this._position.setY(this._position.getY() + dt * this._velocity.getY());
     }
 
     // returns the distance between two bodies
     double distanceTo(Body b)
     {
-        double distanceX = positionX - b.positionX;
-        double distanceY = positionY - b.positionY;
+        double distanceX = this._position.getX() - b._position.getX();
+        double distanceY = this._position.getY() - b._position.getY();
         return sqrt(distanceX * distanceX + distanceY * distanceY);
     }
 
@@ -312,8 +309,8 @@ class Body
 
     void resetForce()
     {
-        forceX = 0.0;
-        forceY = 0.0;
+        this._acceleration.setX(0.0);
+        this._acceleration.setY(0.0);
     }
 
     // compute the net force acting between the body a and b, and
@@ -323,11 +320,11 @@ class Body
     {
         Body a = this;
         double EPS = 3E4; // softening parameter (just to avoid infinities)
-        double distanceX = b.positionX - a.positionX;
-        double distanceY = b.positionY - a.positionY;
+        double distanceX = b._position.getX() - a._position.getX();
+        double distanceY = b._position.getY() - a._position.getY();
         double distance = sqrt(distanceX * distanceX + distanceY * distanceY);
         double F = (G * a.mass * b.mass) / (distance * distance + EPS * EPS);
-        a.forceX += F * distanceX / distance;
-        a.forceY += F * distanceY / distance;
+        a._acceleration.setX(a._acceleration.getX() + F * distanceX / distance);
+        a._acceleration.setY(a._acceleration.getY() + F * distanceY / distance);
     }
 }
