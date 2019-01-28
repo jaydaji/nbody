@@ -32,13 +32,11 @@ class Home extends StatelessWidget
     {
         return Scaffold(
             appBar: AppBar(
-                elevation: 0.0,
                 title: Text(
                     "Flutter Experiments",
                     style: TextStyle(
                         color: Colors.white,
-                        fontFamily: 'Nunito',
-                        letterSpacing: 1.0),
+                    ),
                 ),
                 backgroundColor: Color(0xFF2979FF),
                 centerTitle: true),
