@@ -261,6 +261,7 @@ class Body
     {
         this._position = new Position(position.getX(), position.getY());
         this._velocity = new Momentum(velocity.getX(), velocity.getY());
+        this._acceleration = new Acceleration(0.0, 0.0);
 
         this.mass = mass;
         if (this.mass != 3.0)
