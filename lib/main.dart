@@ -4,6 +4,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
+import './Constants/Constants.class.dart';
+
 import './Models/Body/Body.class.dart';
 import './Models/Body/Position.class.dart';
 import './Models/Body/Velocity.class.dart';
@@ -33,12 +35,12 @@ class Home extends StatelessWidget
         return Scaffold(
             appBar: AppBar(
                 title: Text(
-                    "Flutter Experiments",
+                    Constants.title,
                     style: TextStyle(
                         color: Colors.white,
                     ),
                 ),
-                backgroundColor: Color(0xFF2979FF),
+                backgroundColor: Constants.backgroundColor,
                 centerTitle: true),
             body: HomeContent());
     }
@@ -58,7 +60,7 @@ class _HomeContentState extends State<HomeContent>
 
     List<Body> bodys = [Body(BodyPosition(positionX: 200.0, positionY: 200.0),
         BodyVelocity(velocityX: 0.0, velocityY: 0.0),
-        1.5)
+        3.0)
     ];
 
     double percentage = 0.0;
