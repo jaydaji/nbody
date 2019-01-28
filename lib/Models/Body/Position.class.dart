@@ -1,9 +1,9 @@
-class Position
+class BodyPosition
 {
     double _positionX;
     double _positionY;
 
-    Position(double positionX, double positionY)
+    BodyPosition({double positionX = 200.0, double positionY = 200})
     {
         this._positionX = positionX;
         this._positionY = positionY;

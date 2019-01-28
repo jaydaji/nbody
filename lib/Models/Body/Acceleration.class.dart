@@ -1,9 +1,9 @@
-class Acceleration
+class BodyAcceleration
 {
     double _accelerationX;
     double _accelerationY;
 
-    Acceleration(double accelerationX, double accelerationY)
+    BodyAcceleration({double accelerationX, double accelerationY})
     {
         this._accelerationX = accelerationX;
         this._accelerationY = accelerationY;

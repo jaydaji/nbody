@@ -1,9 +1,9 @@
-class Momentum
+class BodyVelocity
 {
     double _velocityX;
     double _velocityY;
 
-    Momentum(double velocityX, double velocityY)
+    BodyVelocity({double velocityX = 0.0, double velocityY = 0.0})
     {
         this._velocityX = velocityX;
         this._velocityY = velocityY;

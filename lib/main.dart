@@ -4,22 +4,22 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
-import './Models/Body.class.dart';
-import './Models/Velocity.class.dart';
-import './Models/Position.class.dart';
+import './Models/Body/Body.class.dart';
+import './Models/Body/Position.class.dart';
+import './Models/Body/Velocity.class.dart';
 
 void main()
-=> runApp(new MyApp());
+=> runApp(MyApp());
 
 class MyApp extends StatelessWidget
 {
     @override
     Widget build(BuildContext context)
     {
-        return new MaterialApp(
+        return MaterialApp(
             title: 'Gravity Simulation',
-            theme: new ThemeData(),
-            home: new Home(),
+            theme: ThemeData(),
+            home: Home(),
             debugShowCheckedModeBanner: false,
         );
     }
@@ -31,18 +31,18 @@ class Home extends StatelessWidget
     Widget build(BuildContext context)
     {
         return Scaffold(
-            appBar: new AppBar(
+            appBar: AppBar(
                 elevation: 0.0,
-                title: new Text(
+                title: Text(
                     "Flutter Experiments",
-                    style: new TextStyle(
+                    style: TextStyle(
                         color: Colors.white,
                         fontFamily: 'Nunito',
                         letterSpacing: 1.0),
                 ),
-                backgroundColor: new Color(0xFF2979FF),
+                backgroundColor: Color(0xFF2979FF),
                 centerTitle: true),
-            body: new HomeContent());
+            body: HomeContent());
     }
 }
 
@@ -58,7 +58,10 @@ class _HomeContentState extends State<HomeContent>
 {
     Animation<double> animation;
 
-    List<Body> bodys = [Body(Position(200.0, 200.0), Momentum(0.0, 0.0), 3.0)];
+    List<Body> bodys = [Body(BodyPosition(positionX: 200.0, positionY: 200.0),
+        BodyVelocity(velocityX: 0.0, velocityY: 0.0),
+        1.5)
+    ];
 
     double percentage = 0.0;
     double newPercentage = 0.0;
@@ -135,24 +138,24 @@ class _HomeContentState extends State<HomeContent>
     @override
     Widget build(BuildContext context)
     {
-        return new Center(
-            child: new Container(
+        return Center(
+            child: Container(
                 height: 400.0,
                 width: 400.0,
-                child: new CustomPaint(
-                    foregroundPainter: new MyPainter(
+                child: CustomPaint(
+                    foregroundPainter: MyPainter(
                         lineColor: Colors.amber,
                         completeColor: Colors.blueAccent,
                         completePercent: percentage,
                         bodys: this.bodys,
                         width: 8.0),
-                    child: new Padding(
+                    child: Padding(
                         padding: const EdgeInsets.all(100.0),
-                        child: new RaisedButton(
+                        child: RaisedButton(
                             color: Colors.purple,
                             splashColor: Colors.blueAccent,
-                            shape: new CircleBorder(),
-                            child: new Text("Click"),
+                            shape: CircleBorder(),
+                            child: Text("Click"),
                             onPressed: ()
                             {
                                 setState(()
@@ -176,14 +179,14 @@ class _HomeContentState extends State<HomeContent>
 
     double generateRandomNumber()
     {
-        return new Random().nextInt(250).toDouble();
+        return Random().nextInt(250).toDouble();
     }
 
     void generateNewCircle()
     {
         bodys.add(Body(
-            Position(generateRandomNumber(), generateRandomNumber()),
-            Momentum(0.000000005, -0.0000000005),
+            BodyPosition(positionX: generateRandomNumber(), positionY: generateRandomNumber()),
+            BodyVelocity(velocityX: 0.000000005, velocityY: -0.0000000005),
             Random().nextDouble() / 2)
         );
     }
@@ -209,29 +212,29 @@ class MyPainter extends CustomPainter
     @override
     void paint(Canvas canvas, Size size)
     {
-        Paint line = new Paint()
+        Paint line = Paint()
             ..color = lineColor
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke
             ..strokeWidth = width;
-        Paint complete = new Paint()
+        Paint complete = Paint()
             ..color = completeColor
             ..strokeCap = StrokeCap.round
             ..style = PaintingStyle.stroke
             ..strokeWidth = width;
 
-        Paint nbody = new Paint()
+        Paint nbody = Paint()
             ..color = completeColor
             ..strokeWidth = width;
 
-        Offset center = new Offset(size.width / 2, size.height / 2);
+        Offset center = Offset(size.width / 2, size.height / 2);
         double radius = min(size.width / 2, size.height / 2);
         //This draws the outside circle
         canvas.drawCircle(center, radius, line);
         for (int i = 0; i < bodys.length; ++i)
         {
-            Offset position = new Offset(bodys[i].getPosition().getX(), bodys[i].getPosition().getY());
-            canvas.drawCircle(position, bodys[i].radius, nbody);
+            Offset position = Offset(bodys[i].getPosition().getX(), bodys[i].getPosition().getY());
+            canvas.drawCircle(position, bodys[i].getRadius(), nbody);
         }
         double arcAngle = 2 * pi * (completePercent / 100);
         //This draws the progress circle that fills in the above circle

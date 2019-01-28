@@ -8,41 +8,41 @@ class Body
 {
     double G = 6.673e-11; // gravitational constant
 
-    Position _position;
-    Momentum _velocity;
-    Acceleration _acceleration;
+    BodyPosition _position;
+    BodyVelocity _velocity;
+    BodyAcceleration _acceleration;
 
-    double radius; // force components
-    double mass; // mass
+    double _radius; // force components
+    double _mass; // mass
 
     // create and initialize a new Body
-    Body(Position position, Momentum velocity, double mass)
+    Body(BodyPosition position, BodyVelocity velocity, double mass)
     {
-        this._position = new Position(position.getX(), position.getY());
-        this._velocity = new Momentum(velocity.getX(), velocity.getY());
-        this._acceleration = new Acceleration(0.0, 0.0);
+        this._position = position;
+        this._velocity = velocity;
+        this._mass = mass;
+        this._acceleration = BodyAcceleration();
 
-        this.mass = mass;
-        if (this.mass != 3.0)
+        if (this._mass != 3.0)
         {
-            this.radius = (
+            this._radius = (
                 (3 * (
-                    this.mass / (pi * 4)
+                    this._mass / (pi * 4)
                 )) / 3) * 500;
         }
         else
         {
-            this.radius = 10.0;
+            this._radius = 10.0;
         }
     }
 
-    void setPosition(Position position)
+    void setPosition(BodyPosition position)
     {
         this._position.setX(position.getX());
         this._position.setY(position.getY());
     }
 
-    Position getPosition()
+    BodyPosition getPosition()
     {
         return this._position;
     }
@@ -51,8 +51,8 @@ class Body
     void update(double dt)
     {
         dt = 500000000.0;
-        this._velocity.setX(this._velocity.getX() + dt * this._acceleration.getX() / mass);
-        this._velocity.setY(this._velocity.getY() + dt * this._acceleration.getY() / mass);
+        this._velocity.setX(this._velocity.getX() + dt * this._acceleration.getX() / this._mass);
+        this._velocity.setY(this._velocity.getY() + dt * this._acceleration.getY() / this._mass);
         this._position.setX(this._position.getX() + dt * this._velocity.getX());
         this._position.setY(this._position.getY() + dt * this._velocity.getY());
     }
@@ -83,8 +83,13 @@ class Body
         double distanceX = b._position.getX() - a._position.getX();
         double distanceY = b._position.getY() - a._position.getY();
         double distance = sqrt(distanceX * distanceX + distanceY * distanceY);
-        double F = (G * a.mass * b.mass) / (distance * distance + EPS * EPS);
+        double F = (G * a._mass * b._mass) / (distance * distance + EPS * EPS);
         a._acceleration.setX(a._acceleration.getX() + F * distanceX / distance);
         a._acceleration.setY(a._acceleration.getY() + F * distanceY / distance);
+    }
+
+    double getRadius()
+    {
+        return _radius;
     }
 }
