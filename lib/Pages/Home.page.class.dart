@@ -1,17 +1,25 @@
+//dart imports
 import 'dart:math';
 import 'dart:core';
 import 'dart:ui';
+
+//flutter imports
 import 'package:flutter/material.dart';
 import 'package:flutter/animation.dart';
 
+//constants
 import '../Constants/Constants.class.dart';
 
+//models for bodies
 import '../Models/Body/Body.class.dart';
 import '../Models/Body/Position.class.dart';
 import '../Models/Body/Velocity.class.dart';
 
+//home page widget that contains the scaffold
 class Home extends StatelessWidget
 {
+    HomeContent _homeInstance = HomeContent();
+
     @override
     Widget build(BuildContext context)
     {
@@ -25,15 +33,33 @@ class Home extends StatelessWidget
                 ),
                 backgroundColor: Constants.backgroundColor,
                 centerTitle: true),
-            body: HomeContent());
+            body: SafeArea(child: _homeInstance
+            ),
+            floatingActionButton: FloatingActionButton(
+                child: Icon(Icons.add),
+                onPressed: ()
+                {
+                    showAboutDialog(context: context);
+                },
+            ),
+        );
     }
 }
 
+//home content widget to go within the home page
 class HomeContent extends StatefulWidget
 {
+    _HomeContentState _homeContentState = _HomeContentState();
+
     @override
     _HomeContentState createState()
-    => _HomeContentState();
+    => _homeContentState;
+
+    void onPressed()
+    {
+        print('hello');
+        _homeContentState.generateNewCircle();
+    }
 }
 
 class _HomeContentState extends State<HomeContent>
@@ -46,52 +72,41 @@ class _HomeContentState extends State<HomeContent>
         1.5)
     ];
 
-    double percentage = 0.0;
-    double newPercentage = 0.0;
-    AnimationController controller;
+    double _percentage = 0.0;
+
+    AnimationController _controller;
 
     @override
     void initState()
     {
         super.initState();
 
-        controller = AnimationController(
-            duration: const Duration(milliseconds: 20), vsync: this);
-        animation = Tween(begin: 0.0, end: 100.0).animate(controller);
+        _controller = AnimationController(
+            duration: const Duration(milliseconds: 10), vsync: this);
+        animation = Tween(begin: 0.0, end: 100.0).animate(_controller);
 
         animation.addStatusListener((status)
         {
             if (status == AnimationStatus.completed)
             {
-                controller.forward(from: 0.0);
+                _controller.forward(from: 0.0);
             }
         });
 
-        controller.addListener(()
+        _controller.addListener(()
         {
             setState(()
             {
                 runSimulation(bodys.length);
-
-                //percentage = lerpDouble(percentage, newPercentage, controller.value);
             });
         });
 
-        controller.forward();
+        _controller.forward();
 
         setState(()
         {
-            percentage = 0.0;
-
-            /* controller = AnimationController(
-          vsync: this, duration: new Duration(milliseconds: 3000));
-
-
-
-      controller.forward(from: 0.0);*/
+            _percentage = 0.0;
         });
-
-        //
     }
 
     runSimulation(int bodysLength)
@@ -114,7 +129,7 @@ class _HomeContentState extends State<HomeContent>
 
     dispose()
     {
-        controller.dispose();
+        _controller.dispose();
         super.dispose();
     }
 
@@ -129,7 +144,7 @@ class _HomeContentState extends State<HomeContent>
                     foregroundPainter: MyPainter(
                         lineColor: Colors.amber,
                         completeColor: Colors.blueAccent,
-                        completePercent: percentage,
+                        completePercent: _percentage,
                         bodys: this.bodys,
                         width: 8.0),
                     child: Padding(
@@ -144,14 +159,6 @@ class _HomeContentState extends State<HomeContent>
                                 setState(()
                                 {
                                     generateNewCircle();
-                                    percentage = newPercentage;
-                                    newPercentage += 10;
-                                    if (newPercentage > 100.0)
-                                    {
-                                        percentage = 0.0;
-                                        newPercentage = 0.0;
-                                    }
-                                    controller.forward(from: 0.0);
                                 });
                             }),
                     ),
