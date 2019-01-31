@@ -3,7 +3,7 @@ class BodyPosition
     double _positionX;
     double _positionY;
 
-    BodyPosition({double positionX = 200.0, double positionY = 200})
+    BodyPosition({double positionX = 200.0, double positionY = 200.0})
     {
         this._positionX = positionX;
         this._positionY = positionY;

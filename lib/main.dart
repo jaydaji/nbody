@@ -1,10 +1,16 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-import './Pages/Home.page.class.dart';
+import './Screens/Home.dart';
 
 void main()
-=> runApp(MyApp());
+{
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_)
+    {
+        runApp(MyApp());
+    });
+}
 
 class MyApp extends StatelessWidget
 {
@@ -14,7 +20,7 @@ class MyApp extends StatelessWidget
         return MaterialApp(
             title: 'Gravity Simulation',
             theme: ThemeData(),
-            home: Home(),
+            home: HomeScreen(),
             debugShowCheckedModeBanner: false,
         );
     }

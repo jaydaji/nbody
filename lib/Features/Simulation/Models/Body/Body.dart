@@ -1,6 +1,6 @@
-import './Position.class.dart';
-import './Velocity.class.dart';
-import './Acceleration.class.dart';
+import './Position.dart';
+import './Velocity.dart';
+import './Acceleration.dart';
 
 import 'dart:math';
 
@@ -50,7 +50,7 @@ class Body
     // update the velocity and position using a timestep dt
     void update(double dt)
     {
-        dt = 500000000.0;
+        dt = 350000000.0;
         this._velocity.setX(this._velocity.getX() + dt * this._acceleration.getX() / this._mass);
         this._velocity.setY(this._velocity.getY() + dt * this._acceleration.getY() / this._mass);
         this._position.setX(this._position.getX() + dt * this._velocity.getX());
@@ -86,6 +86,19 @@ class Body
         double F = (G * a._mass * b._mass) / (distance * distance + EPS * EPS);
         a._acceleration.setX(a._acceleration.getX() + F * distanceX / distance);
         a._acceleration.setY(a._acceleration.getY() + F * distanceY / distance);
+    }
+
+    bool isValid()
+    {
+        if (this._position
+            .getX()
+            .runtimeType == double && this._position
+            .getY()
+            .runtimeType == double)
+        {
+            return true;
+        }
+        return false;
     }
 
     double getRadius()
